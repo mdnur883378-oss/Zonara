@@ -1,0 +1,62 @@
+# NOTICE — 权利声明与第三方组件
+
+本文件是 Zonara 的**权属声明与来源说明**，用于确权与维权取证时说明「这是谁的作品、
+里面有什么第三方内容、水印埋在哪里」。
+
+## 一、权利人
+
+- 软件名称：**Zonara**（可自由分区、拖入即吸附的 AI 生图多面板工作台）
+- 著作权人：**aqbxg920548195-byte**
+- 版权声明：`Copyright (c) 2026 aqbxg920548195-byte. All Rights Reserved.`
+- 项目标识（Project ID）：**ZNR-2026-AQ7F3-K9D2**（稳定不变，相当于本项目的「钢印」）
+- 许可方式：**专有许可 · 仅授予非商业使用权**
+  - 许可条款：[LICENSE](LICENSE)
+  - 最终用户协议：[EULA.md](EULA.md)（安装向导展示的是纯文本版 `EULA.txt`）
+
+## 二、权利声明
+
+本软件**不是开源软件**。仅授予个人非商业使用之权利，**禁止**商业使用、转售、
+改名再发布、修改衍生及以 SaaS 形式对外提供。详见 [LICENSE](LICENSE)。
+
+## 三、数字水印与可追溯标识（取证要点）
+
+本软件在多个层级埋入了可识别的标识，用于证明「某份代码/安装包来源于 Zonara」：
+
+| 层级 | 位置 | 形式 | 说明 |
+|---|---|---|---|
+| ① 源文件头 | 每个 `src/**`、`electron/**`、`index.html`、`launch.js` | 明文注释 | 版权声明 + 项目标识 + 许可摘要 |
+| ② 隐形水印 | `src/watermark.js` 的 `WM` 区块 | **零宽字符**（U+200B/200C/200D） | 肉眼不可见，复制粘贴会跟随；载荷含 Project ID、作者、Build ID |
+| ③ ASCII 指纹 | `src/watermark.js`、关于页、启动日志 | 明文常量 | `ZNR-2026-AQ7F3-K9D2` |
+| ④ 构建标识 | `electron/build-info.js`、关于页、启动日志 | 明文常量 | `ZNR-BUILD-<日期>-<时间>-<随机>`，**每次构建唯一** |
+| ⑤ 可执行文件元数据 | 打包产物 `.exe` 的文件属性 | 版本信息 | 版权与产品名（由 `package.json` 的 `build.copyright` 写入） |
+| ⑥ 安装包许可页 | NSIS 安装向导 | 明文 | 展示 `EULA.txt`，**必须勾选「我已阅读并同意」才能点「下一步」**（未勾选时 Next 按钮禁用，只能取消退出）→ 构成「明知」 |
+| ⑦ 安装脚本开关 | `assets/installer.nsh` | 明文 | `!define MUI_LICENSEPAGE_CHECKBOX` —— 上面 ⑥ 的「强制勾选」就靠这一行 |
+
+> **追溯泄露源**：给不同分发对象打包时执行 `npm run stamp -- --tag=对象标识`，
+> 该对象的包会带上**独有的 Build ID**。若某个包流出，比对 Build ID 即可定位来源。
+
+扫描可疑副本：`npm run verify -- <目录或文件>`（见 [docs/forensics.md](docs/forensics.md)）。
+
+## 四、第三方开源组件
+
+以下组件**不属于**本权利人所有，各自适用其原始许可（**分发时不得删除其许可声明**）：
+
+| 组件 | 许可 | 用途 |
+|---|---|---|
+| [Electron](https://www.electronjs.org/) | MIT | 桌面运行时 |
+| [dockview-core](https://github.com/mathuo/dockview) | MIT | 面板分区/停靠布局 |
+| [koffi](https://koffi.dev/) | MIT | FFI（调用系统 API 做拖拽兼容层） |
+| 其余间接依赖 | 见 `package-lock.json` | — |
+
+本项目**未包含**任何 GPL / AGPL / LGPL 代码。
+
+## 五、创作与发布时间线（证据索引）
+
+完整的构建/发布记录（含每次构建的 Build ID、git 提交号、产物 SHA-256）见
+[docs/release-log.md](docs/release-log.md)。**该文件的历史记录不要删改**——
+它是证明创作与发布先后顺序的时间线证据。
+
+## 六、发现侵权怎么办
+
+请见 [docs/forensics.md](docs/forensics.md)：取证步骤、水印比对方法、
+法律依据与可主张的赔偿。
